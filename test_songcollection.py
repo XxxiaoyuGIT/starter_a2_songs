@@ -2,7 +2,6 @@
 from song import Song
 from songcollection import SongCollection
 
-
 def run_tests():
     """Test SongCollection class."""
 
@@ -27,11 +26,19 @@ def run_tests():
     print("Test sorting - year:")
     song_collection.sort("year")
     print(song_collection)
-    # TODO: Add more sorting tests
 
-    # TODO: Test saving songs (check file manually to see results)
+    # Test song sorting by artist name
+    print("Test sorting - artist:")
+    song_collection.sort("artist")
+    print(song_collection)
 
-    # TODO: Add more tests, as appropriate, for each method
+    # Test song sorting
+    print("Test sorting - title:")
+    song_collection.sort("title")
+    print(song_collection)
 
+    # Test saving songs
+    print("Test saving songs:")
+    song_collection.save_songs('songs.json')
 
 run_tests()

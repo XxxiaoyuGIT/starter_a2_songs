@@ -1,2 +1,81 @@
-# TODO: Create your Kivy layout in the kv language here
+# app.kv
+# This file defines the layout for the Kivy application using Kivy's KV language.
+
 BoxLayout:
+    orientation: 'horizontal'  # Main layout is horizontal, dividing the screen into two sections.
+
+    # Left panel for inputs and sorting options.
+    BoxLayout:
+        orientation: 'vertical'  # Align the left panel up and down.
+        size_hint_x: None  # Horizontal cannot be automatically resized.
+        width: 300  # Set the width of the left display panel.
+        spacing: 10  # Set the spacing between various subcomponents (widgets).
+        padding: 10  # Add Inner Margin
+
+        Label:
+            text: 'Sort by:'
+        Spinner:
+            id: sort_spinner  # Assign a unique identifier to the dropdown component
+            text: 'Artist'  # Text initially displayed on the dropdown box
+            values: ['Artist','Title','Year', 'Learned']  # List of options available for selection
+            on_text: app.sort_songs(self.text)  # Calls a method to sort songs when an option is selected.
+
+        # Input fields for adding a new song.
+        TextInput:
+            id: title_input  # Assign a unique identifier to the first text input box.
+            hint_text: 'Title'
+            multiline: False
+        TextInput:
+            id: artist_input  # Assign a unique identifier to the second text input box.
+            hint_text: 'Artist'
+            multiline: False
+        TextInput:
+            id: year_input  # Assign a unique identifier to the third text input box.
+            hint_text: 'Year'
+            multiline: False
+
+        # Buttons for adding and clearing the song input fields.
+        Button:
+            text: 'Add Song'
+            on_release: app.add_song()  # When the user clicks the button, "add_song" in the application will be called.
+        Button:
+            text: 'Clear'
+            on_release: app.clear_inputs()  # When the user clicks the second button, the "clear_inputs" in the application will be called.
+
+    # Right panel for displaying songs and status.
+    BoxLayout:
+        orientation: 'vertical' #Set the direction of the box layout to vertical.
+        size_hint_x: None
+        width: 500  # The width of the right panel.
+
+        # Horizontal layout for learned and to-learn counters.
+        BoxLayout:
+            orientation: 'horizontal' #Set the direction of the box layout to horizontal.
+            size_hint_y: None
+            height: 30  # The height of the container for the labels.
+
+            Label:
+                text: "To Learn: {}".format(app.to_learn)
+            Label:
+                text: "Learned: {}".format(app.learned)
+
+        ScrollView:
+            size_hint_x: 1  # Fills the horizontal space in its container.
+
+            GridLayout:
+                id: songs_box
+                cols: 1
+                size_hint_y: 1
+                height: 200
+                width:200
+
+        # A label used to display the status.
+        Label:
+            id: status_label
+            size_hint_y: None
+            height: 30
+            text: app.status_text  # The text of the label will update as the application status changes.
+
+
+
+

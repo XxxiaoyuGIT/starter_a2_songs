@@ -1,118 +1,106 @@
-"""
-Name:Xiaoyu Shi
-Date Started:21/10/2023
-GitHub URI:https://github.com/XxxiaoyuGIT/starter_a1_songs.git
+"""Song List Manager
+
+Student name: Xiaoyu Shi
+Start time: 15/11/2023
+
+This script allows users to modify the song list,
+Add your favorite song to the list and learn it. Store the song in a JSON file.
+Use song classification and collection.
+
+GitHub URL: https://github.com/XxxiaoyuGIT/starter_a2_songs/blob/master/a1_classes.py
 """
 
+from song import Song
+from songcollection import SongCollection
+import json
 
-import csv  #Import the CSV module of the CSV file.
-# Main function
 def main():
-    songs = []  # Initialize an empty list to store songs
-
-    try:
-        # Open the CSV file for reading
-        with open('songs.csv', 'r', newline='') as file:
-            reader = csv.reader(file)
-            # Convert CSV content to a list of songs
-            songs = list(reader)
-    except FileNotFoundError:
-        # Handle the exception if the file does not exist
-        print("No 'songs.csv' file found. Starting with an empty song list.")
-
-    # Print the welcome message with the total songs count
-    print("Song List 2.0 - by [Your Name]")
-    print(f"{len(songs)} songs loaded.")
-    display_menu()  # Display the main menu
-
-    # Take the user's choice for a menu option
-    choice = input(">>> ").upper()
-    # Loop until the user chooses to quit
-    while choice != 'Q':
-        if choice == 'D':
-            display_songs_function(songs)  # Display the list of songs
-        elif choice == 'A':
-            add_song_function(songs)  # Add a new song to the list
-        elif choice == 'C':
-            complete_song_function(songs)  # Mark a song as learned
+    """
+    Main function of the song list manager.
+    """
+    song_collection = load_songs("songs.json")
+    while True:
+        print_menu()
+        choice = input(">>> ").upper()
+        if choice == "Q":
+            save_songs(song_collection, "songs.json")
+            break
+        elif choice == "D":
+            display_songs(song_collection)
+        elif choice == "A":
+            add_new_song(song_collection)
+        elif choice == "L":
+            learn_song(song_collection)
         else:
-            # Notify the user if an invalid choice is made
-            print("Invalid menu choice")
+            print("Invalid option")
 
-        display_menu()  # Display the menu again after each action
-        choice = input(">>> ").upper()  # Take the next choice from the user
 
-    # Open the CSV file for writing and save the updated songs list
-    with open('songs.csv', 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerows(songs)
+def load_songs(filename):
+    """
+    Load the song data stored in the JSON file into the SongCollection object in the program for subsequent operation
+    and management of song information.
+    """
+    song_collection = SongCollection()
+    with open(filename, 'r') as file:
+        songs_data = json.load(file)
+        for song_data in songs_data:
+            song = Song(song_data['title'], song_data['artist'], song_data['year'], song_data['is_learned'])
+            song_collection.add_song(song)
+    return song_collection
 
-    # Print the goodbye message with the total songs count
-    print(f"{len(songs)} songs saved to songs.csv\nHave a nice day :)")
 
-# Function to display menu
-def display_menu():
-    # Print menu options
-    print("\nMenu:")
-    print("D - Display songs")
-    print("A - Add new song")
-    print("C - Complete a song")
-    print("Q - Quit")
+def save_songs(song_collection, filename):
+    """
+    Convert the song information in the SongCollection object to JSON format
+    and write it to the specified file.
+    """
+    songs_data = [song.to_dict() for song in song_collection.songs]  # Assumes the Song class has a to_dict method
+    with open(filename, 'w') as file:
+        json.dump(songs_data, file, indent=4)
 
-# Function to mark a song as learned
-def complete_song_function(songs):
-    try:
-        # Ask the user for the song number
-        num = int(input("Enter the number of a song to mark as learned: "))
-        # Check if the entered song number is valid
-        if 1 <= num <= len(songs):
-            # If the song is not learned
-            if songs[num-1][3] == 'n':
-                # Mark the song as learned
-                songs[num-1][3] = 'y'
-                # Notify the user
-                print(f"{songs[num-1][0]} by {songs[num-1][1]} learned")
-            else:
-                # Notify the user if the song is already learned
-                print(f"You have already learned {songs[num-1][0]} by {songs[num-1][1]}.")
-        else:
-            # Notify the user if the entered song number is invalid
-            print("Invalid song number")
-    except ValueError:
-        # Handle the exception if the user doesn't enter a number and notify the user
-        print("Invalid song number")
 
-# Function to add a new song
-def add_song_function(songs):
-    # Take input for song title, artist, and year
+def display_songs(song_collection):
+    """
+    Print the song information in the SongCollection object to the console in a certain format.
+    So that users can view the song list and related information.
+    """
+    songs = song_collection.songs
+    for i, song in enumerate(songs, 1):
+        learned_status = 'learned' if song.is_learned else 'not learned'
+        print(f"{i}. {song.title} by {song.artist} {song.year} ({learned_status})")
+
+
+def add_new_song(song_collection):
+    """
+    Users can enter the title, artist, and year of the song through the console,
+    and then create a new Song object.
+    Add this object to the song collection to expand the song list.
+    """
     title = input("Title: ")
     artist = input("Artist: ")
-    year = input("Year: ")
-    # Check if the song already exists in the list
-    for song in songs:
-        if song[0].lower() == title.lower() and song[1].lower() == artist.lower():
-            # Notify the user if the song exists and return to the menu
-            print(f"{title} by {artist} already exists in the song list.")
-            return
-    # Add the new song to the songs list
-    songs.append([title, artist, year, 'n'])
-    # Notify the user that the song has been added
-    print(f"{title} by {artist} ({year}) added to the song list")
+    year = int(input("Year: "))  # Assuming that the year input is always a valid integer here
+    song_collection.add_song(Song(title, artist, year))
 
-# Function to display songs
-def display_songs_function(songs):
-    # Loop through each song in the songs list
-    for i, song in enumerate(songs):
-        # Set status to "*" if the song is not learned, otherwise empty string
-        status = "*" if song[3] == 'n' else ""
-        # Print song details with status
-        print(f"{i+1}. {song[0]:<20} - {song[1]:<15} ({song[2]}) {status}")
 
-    # Calculate the number of songs not learned
-    not_learned = sum(1 for song in songs if song[3] == 'n')
-    # Print the number of songs learned and not learned
-    print(f"\n{len(songs)-not_learned} songs learned, {not_learned} songs still to learn.")
+def learn_song(song_collection):
+    """
+    Allow users to select a song from the displayed song list and mark it as learned.
+    """
+    display_songs(song_collection)
+    song_number = int(input("Enter the number of the song to mark as learned: "))
+    song_to_learn = song_collection.songs[song_number - 1]
+    song_to_learn.is_learned = True
+    print(f"You have learned {song_to_learn.title}")
 
-# Entry point of the script
-if __name__ == '__main__':
+def print_menu():
+    """
+    Print the main menu options to the console.
+    """
+    print("Menu:")
+    print("D - Display Songs")
+    print("A - Add A New Song")
+    print("L - Learn A New Song")
+    print("Q - Quit")
+
+if __name__ == "__main__":
     main()

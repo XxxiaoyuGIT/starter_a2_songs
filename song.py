@@ -1,4 +1,4 @@
-"""..."""
+"""There is code for song class"""
 class Song:
     def __init__(self, title="", artist="", year=0, is_learned=False):
         """Constructor for the Song class."""

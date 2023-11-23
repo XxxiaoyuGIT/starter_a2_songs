@@ -26,8 +26,10 @@ class SongCollection:
     def load_songs(self, filename):
         """Load songs from a JSON file into the list of Song objects."""
         with open(filename, 'r') as file:
+            # Use the json. load method to read the file content and parse it into a Python data structure.
             songs_data = json.load(file)
             for song_data in songs_data:
+                # Create a new Song object and initialize its properties using the data from the dictionary.
                 song = Song(song_data['title'], song_data['artist'], song_data['year'], song_data['is_learned'])
                 self.songs.append(song)
 

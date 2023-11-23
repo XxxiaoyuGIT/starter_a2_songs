@@ -30,17 +30,17 @@ A Python project with GUI and Console programs that (re)use classes to manage a 
 
 ## 7. Describe the main challenges or obstacles you faced and how you overcame them.
 
-Design of application architecture: 
--In larger projects, designing a reasonable application architecture is crucial. The organizational structure of classes and methods was used in the project, but as the project size increases, more design patterns and organizational structures may be required.
+1.Design of application architecture: 
+In larger projects, designing a reasonable application architecture is crucial. The organizational structure of classes and methods was used in the project, but as the project size increases, more design patterns and organizational structures may be required.
 
-Code specification: 
--In this large project, attention should be paid to the writing standards of the code. If you don't pay attention, errors will be reported due to code specification issues. Pay attention to where to use "_" and where to use spaces.
+2.Code specification: 
+In this large project, attention should be paid to the writing standards of the code. If you don't pay attention, errors will be reported due to code specification issues. Pay attention to where to use "_" and where to use spaces.
 
-Data persistence: 
--Properly save and load data (such as song lists). To ensure the integrity of the data, it is important to process the files correctly and repeatedly check them.
+3.Data persistence: 
+Properly save and load data (such as song lists). To ensure the integrity of the data, it is important to process the files correctly and repeatedly check them.
 
-Use Kivy files correctly and create the correct format: 
--According to the requirements of the question, where vertical distribution is required and where horizontal distribution is required.
+4.Use Kivy files correctly and create the correct format: 
+According to the requirements of the question, where vertical distribution is required and where horizontal distribution is required.
 
 ## 8. Briefly describe your experience using classes and if/how they improved your code.
 

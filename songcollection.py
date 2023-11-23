@@ -1,4 +1,5 @@
 """There is code for songcollection class"""
+
 import json
 from song import Song
 
